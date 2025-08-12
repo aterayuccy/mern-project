@@ -18,9 +18,9 @@ const LoginComponent = ({currentUser,setCurrentUser}) => {
     try{
         let response =await AuthService.login(email,password);
         localStorage.setItem("user",JSON.stringify(response.data));
-        window.alert("Login Successfull");
+        window.alert("您已成功登入");
         setCurrentUser(AuthService.getCurrentUser());
-        navigate("/profile");
+        navigate("/");
     } catch(e) {
       setMessage(e.response.data);
     }    

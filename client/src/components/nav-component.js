@@ -6,7 +6,7 @@ import AuthService from "../services/auth.service";
 const NavComponent = ({currentUser,setCurrentUser}) => {
   const handleLogout = () => {
     AuthService.logout();
-    window.alert("You have been logged out");
+    window.alert("您已成功登出");
     setCurrentUser(null);
   }
   return (
@@ -28,11 +28,19 @@ const NavComponent = ({currentUser,setCurrentUser}) => {
 
             <div className="collapse navbar-collapse" id="navbarNav">
               <ul className="navbar-nav">
+                {/* {currentUser && currentUser.user.role == 'seller' && <li className="nav-item">
+                  <Link className="nav-link active" to="/return">
+                    返回商城
+                  </Link>                
+                </li>} */}
+                
+                
                 <li className="nav-item">
                   <Link className="nav-link active" to="/">
                     首頁
                   </Link>
                 </li>
+                
 
                 {!currentUser &&
                 <li className="nav-item">
@@ -49,40 +57,54 @@ const NavComponent = ({currentUser,setCurrentUser}) => {
                   </Link>
                 </li>}
 
-              {currentUser &&
+              {currentUser /*&& currentUser.user.role == 'buyer'*/ &&
                 <li className="nav-item">
                   <Link onClick={handleLogout} className="nav-link" to="/">
                     登出
                   </Link>
                 </li>}
               
-              {currentUser &&
+              {currentUser /*&& currentUser.user.role == 'buyer'*/ &&
                 <li className="nav-item">
                   <Link className="nav-link" to="/profile">
                     個人頁面
                   </Link>
                 </li>}
 
-              {currentUser &&
+              {currentUser /*&& currentUser.user.role == 'buyer'*/ &&
                 <li className="nav-item">
-                  <Link className="nav-link" to="/course">
-                    課程頁面
+                  <Link className="nav-link" to="/product">
+                    購買紀錄
                   </Link>
                 </li>}
 
-                {currentUser && currentUser.user.role == 'instructor' &&
+                {currentUser && currentUser.user.role == 'buyer' &&
                 <li className="nav-item">
-                  <Link className="nav-link" to="/postCourse">
-                    新增課程
+                  <Link className="nav-link" to="/sellProduct">
+                    成為賣家
+                  </Link>
+                </li>}                
+
+                {currentUser && currentUser.user.role == 'seller' &&
+                <li className="nav-item">
+                  <Link className="nav-link" to="/myProduct">
+                    我的賣場
+                  </Link>
+                </li>}
+
+                {currentUser && currentUser.user.role == 'seller' &&
+                <li className="nav-item">
+                  <Link className="nav-link" to="/postProduct">
+                    新增商品
                   </Link>
                 </li>}
               
-              {currentUser && currentUser.user.role == 'student' &&
+              {/* {currentUser && currentUser.user.role == 'buyer' &&
                 <li className="nav-item">
                   <Link className="nav-link" to="/enroll">
-                    註冊課程
+                    購買商品
                   </Link>
-                </li>}
+                </li>} */}
               </ul>
             </div>
           </div>

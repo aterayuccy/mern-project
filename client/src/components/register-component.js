@@ -7,7 +7,7 @@ const RegisterComponent = () => {
   let [username,setUsername] = useState("");
   let [email,setEmail] = useState("");
   let [password,setPassword] = useState("");
-  let [role,setRole] = useState("");
+  let [role,setRole] = useState("buyer");
   let [message,setMessage] = useState("");
 
   const handleUsername = (e) => {
@@ -24,7 +24,7 @@ const RegisterComponent = () => {
   }
   const handleRegister = (e) => {
     AuthService.register(username,email,password,role).then(() => {
-      window.alert("註冊成功"); 
+      window.alert("您已成功註冊"); 
       navigate("/login");
     }).catch((e) => {
       setMessage(e.response.data);
@@ -66,17 +66,17 @@ const RegisterComponent = () => {
             placeholder="長度至少超過6個英文或數字"
           />
         </div>
-        <br />
+        {/* <br />
         <div className="form-group">
           <label htmlFor="password">身份：</label>
           <input
             onChange={handleRole}
             type="text"
             className="form-control"
-            placeholder="只能填入student或是instructor這兩個選項其一"
+            placeholder="只能填入buyer或是seller這兩個選項其一"
             name="role"
           />
-        </div>
+        </div> */}
         <br />
         <button onClick={handleRegister} className="btn btn-primary">
           <span>註冊會員</span>

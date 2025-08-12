@@ -1,11 +1,15 @@
 import React ,{useEffect,useState} from "react";
 import { useNavigate } from "react-router-dom";
-import CourseService from "../services/course.service"
+import ProductService from "../services/product.service";
 
 const EnrollComponent = ({currentUser,setCurrentUser}) => {
     const navigate=useNavigate();
     let [searchInput,setSearchInput]=useState('')
     let [searchResult,setSearchResult]=useState(null)
+    const [quantities, setQuantities] = useState({});
+
+    // let [countInput,setCountInput]=useState('')
+    // let [countResult,setCountResult]=useState(null)
     const handleTakeToLogin = () => {
         navigate('/login');
     }
@@ -14,8 +18,16 @@ const EnrollComponent = ({currentUser,setCurrentUser}) => {
         setSearchInput(e.target.value)
     }
 
-    const handleSearch =  () => {
-        CourseService.getCourseByName(searchInput).then((data)=>{
+    // const handleQuantityChange = (e, productId) => {
+    //     setQuantities({
+    //         ...quantities,
+    //         [productId]: e.target.value,
+    //     });
+    //     };
+
+
+    const handleSearch =  () => {         
+        ProductService.getProductByName(searchInput).then((data)=>{
             setSearchResult(data.data)
         }).catch(e=>{
             console.log(e)
@@ -23,73 +35,102 @@ const EnrollComponent = ({currentUser,setCurrentUser}) => {
     }
 
     const handleEnroll = (e) => {
-        CourseService.enroll(e.target.id).then(()=>{
-            window.alert("Enrolled Successfully")
-            navigate("/course")
+        if (!currentUser) {
+            window.alert("請先登入才能購買商品");
+            navigate("/login");
+            return;
+        }
+
+        // const quantity = parseInt(quantities[productId]) || 1;
+        ProductService.enroll(e.target.id/*productId, quantity*/).then(()=>{
+            window.alert("您已成功購買")
+            navigate("/product")
         }).catch(e=>{
             console.log(e)
         })
     }
 
     return (<div style={{padding:"3rem"}}>
-        {!currentUser && (
+        {/* {!currentUser && (
             <div>
                 <p>您必須先登入</p>
                 <button 
                 className="btn btn-primary btn-lg"
                 onClick={handleTakeToLogin}>回到登入頁面</button>
             </div>
-        )}   
+        )}    */}
         
-        {currentUser && currentUser.user.role =="instructor" && (
+        {/* {currentUser && currentUser.user.role =="seller" && (
         <div>
-            <h1>只有學生才能註冊課程</h1>
+            <h1>只有買家才能購買商品</h1>
         </div>
-        )}
+        )} */}
 
-        {currentUser && currentUser.user.role =="student" && (
+        {/* {currentUser && currentUser.user.role =="buyer" && (
         <div className="search input-group mb-3">
             <input 
             type="text" 
             className="form-control"
             onChange={handleChangeInput}
             />
-            <button onClick={handleSearch} className="btn btn-primary">搜尋課程</button>
+            <button onClick={handleSearch} className="btn btn-primary">搜尋商品</button>
         </div>
-        )}
+        )} */}
+
+        <div className="search input-group mb-3">
+            <input 
+            type="text" 
+            className="form-control"
+            onChange={handleChangeInput}
+            />
+            <button onClick={handleSearch} className="btn btn-primary">搜尋商品</button>
+        </div>
         
         {
-            currentUser && searchResult && searchResult.length != 0 && <div>
-                <p>返回數據</p>
-                    {searchResult.map((course)=>{
+            /*currentUser && */searchResult && searchResult.length != 0 && <div>
+                {/* <p>返回數據</p> */}
+                    {searchResult.map((product)=>{
                         return (<div 
-                        key={course._id} 
+                        key={product._id} 
                         className="card" 
                         style={{width: "18rem"}}
                         >
 
                        
                         <div className="card-body">
-                             <h5 className="card-title">課程名稱:{course.title}</h5>
+                             <h5 className="card-title">商品名稱:{product.title}</h5>
                     <p style={{margin:"0.5rem 0rem"}} className ="card-text">
-                        {course.description}
+                        {product.description}
                     </p>
                     <p style={{margin:"0.5rem 0rem"}}>
-                        學生人數:{course.students.length}
+                        購買次數:{product.buyer.length}
+                        {/* 購買數量: {
+    product.buyer.reduce((total, b) => total + b.quantity, 0)
+  } */}
                     </p>
                     <p style={{margin:"0.5rem 0rem"}}>
-                        課程價格:{course.price}
+                        商品價格:{product.price}
                     </p>
                     <p style={{margin:"0.5rem 0rem"}}>
-                        講師:{course.instructor.username}
+                        賣家:{product.seller.username}
                     </p>
+{/* 
+                    <input
+                        type="number"
+                        min="1"
+                        placeholder="購買數量"
+                        value={quantities[product._id] || ""}
+                        onChange={(e) => handleQuantityChange(e, product._id)}
+                        className="form-control mb-2"
+                    /> */}
 
                     <a href="#" 
-                    id={course._id} 
+                    id={product._id} 
                     className="card-text btn btn-primary"
                     onClick={handleEnroll}
+                    // onClick={() => handleEnroll(product._id)}
                     >
-                        註冊課程
+                        購買商品
                     </a>
                         </div>
                          </div>)
@@ -98,6 +139,10 @@ const EnrollComponent = ({currentUser,setCurrentUser}) => {
                     }
             </div>
         }
+
+
+
+
         </div>
     )
     

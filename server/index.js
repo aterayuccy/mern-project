@@ -4,15 +4,16 @@ const mongoose=require('mongoose');
 const dotenv=require('dotenv');
 dotenv.config();
 const authRoute=require('./routes').auth;
-const courseRoute=require('./routes').course;
+const productRoute=require('./routes').product;
 const passport=require('passport');
 require('./config/passport')(passport);
+app.use(passport.initialize());
 const cors = require('cors');
 
 mongoose
     .connect("mongodb://localhost:27017/mernDB")
     .then(()=>{
-        console.log("Connected to MongoDB")
+        console.log("連結到MongoDB")
     })
     .catch((e) =>{
         console.log(e);
@@ -27,10 +28,10 @@ app.use('/api/user',authRoute);
 
 
 app.use(
-    '/api/courses',
-    passport.authenticate('jwt', { session: false })
-    ,courseRoute)
+    '/api/product'/*,
+    passport.authenticate('jwt', { session: false })*/
+    ,productRoute)
 
 app.listen(8080,()=>{
-    console.log("Server is running on port 8080")
+    console.log("後端伺服器聆聽在port 8080...")
 })

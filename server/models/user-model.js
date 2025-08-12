@@ -21,7 +21,7 @@ const userSchema=new Schema({
     },
     role:{
         type:String,
-        enum:["student","instructor"],
+        enum:["buyer","seller"],
         required:true
     },
     date:{
@@ -31,12 +31,12 @@ const userSchema=new Schema({
 })
 
 
-userSchema.methods.isStudent= function(){
-    return this.role==="student";
+userSchema.methods.isBuyer= function(){
+    return this.role==="buyer";
 }
 
-userSchema.methods.isTeacher= function(){
-    return this.role==="teacher";
+userSchema.methods.isSeller= function(){
+    return this.role==="seller";
 }
 
 userSchema.methods.comparePassword=async function(password,cb){

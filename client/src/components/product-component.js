@@ -1,31 +1,23 @@
 import React,{useState,useEffect} from "react";
 import {useNavigate} from "react-router-dom";
-import CourseService from "../services/course.service";
+import ProductService from "../services/product.service";
 
-const CourseComponent = ({currentUser,setCurrentUser}) => {
+const ProductComponent = ({currentUser,setCurrentUser}) => {
     const navigate=useNavigate();
     const handleTakeToLogin = () => {
         navigate('/login');
     }
 
-    const [courseData, setCourseData] = useState(null);
+    const [productData, setProductData] = useState(null);
     useEffect(()=>{
         let _id;
         if (currentUser){
             _id = currentUser.user._id;
-            if(currentUser.user.role=="instructor"){
-                CourseService.get(_id)
-                .then((data) => {
-                    setCourseData(data.data);
-                })
-                .catch((e)=>{
-                    console.log(e);
-                })
-            } else if(currentUser.user.role=="student"){
-                console.log("學生")
-                CourseService.getEnrolledCourses(_id)
+            if(currentUser.user){
+                console.log("買家")
+                ProductService.getEnrolledProduct(_id)
                 .then((data)=>{
-                    setCourseData(data.data);
+                    setProductData(data.data);
                 }).catch((e)=>{
                     console.log(e);
                 })
@@ -44,33 +36,32 @@ const CourseComponent = ({currentUser,setCurrentUser}) => {
             </div>
         )}
 
-    {currentUser && currentUser.user.role =="instructor" && (
+    
+
+    {currentUser /*&& currentUser.user.role =="buyer"*/ && (
         <div>
-            <h1>歡迎來到講師的課程頁面</h1>
+            <h1>歡迎來到買家的商品頁面</h1>
         </div>
         )}
 
-    {currentUser && currentUser.user.role =="student" && (
-        <div>
-            <h1>歡迎來到學生的課程頁面</h1>
-        </div>
-        )}
-
-    {currentUser && courseData && courseData.length!=0 && (
+    {currentUser && productData && productData.length!=0 && (
         <div style={{display:"flex",flexWrap:"wrap"}} >
-            {courseData.map((course)=>{
+            {productData.map((product)=>{
                 return (
                 <div className="card" style={{width:"18rem",margin:"1rem"}}>
                     <div className="card-body">
-                    <h5 className="card-title">課程名稱:{course.title}</h5>
+                    <h5 className="card-title">商品名稱:{product.title}</h5>
                     <p style={{margin:"0.5rem 0rem"}} className ="card-text">
-                        {course.description}
+                        {product.description}
                     </p>
                     <p style={{margin:"0.5rem 0rem"}}>
-                        學生人數:{course.students.length}
+                        購買次數:{product.buyer.length}
+                        {/* 購買數量: {
+    product.buyer.reduce((total, b) => total + b.quantity, 0)
+  } */}
                     </p>
                     <p style={{margin:"0.5rem 0rem"}}>
-                        課程價格:{course.price}
+                        商品價格:{product.price}
                     </p>
              </div>
                 </div>
@@ -82,4 +73,4 @@ const CourseComponent = ({currentUser,setCurrentUser}) => {
 
 
 
-export default CourseComponent;
+export default ProductComponent;

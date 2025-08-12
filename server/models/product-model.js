@@ -15,15 +15,29 @@ const courseSchema=new Schema({
         type:Number,
         required: true
     },
-    instructor:{
+    seller:{
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
     },
-    students:{
+    // buyer: [
+    // {
+    //     user: {
+    //     type: [String],
+    //     default: []
+    //     },
+    //     quantity: {
+    //     type: Number,
+    //     required: true,
+    //     min: 1,
+    //     },
+    // }
+    // ]
+
+    buyer:{
         type:[String],
         default:[]
     },
 });
 
 
-module.exports=mongoose.model('Course',courseSchema);
+module.exports=mongoose.model('Product',courseSchema);

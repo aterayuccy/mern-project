@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import CourseService from "../services/course.service";
+import ProductService from "../services/product.service";
 
-const PostCourseComponent = (props) => {
+const PostProductComponent = (props) => {
   let { currentUser, setCurrentUser } = props;
   let [title, setTitle] = useState("");
   let [description, setDescription] = useState("");
@@ -21,11 +21,11 @@ const PostCourseComponent = (props) => {
   const handleChangePrice = (e) => {
     setPrice(e.target.value);
   };
-  const postCourse = () => {
-    CourseService.post(title, description, price)
+  const postProduct = () => {
+    ProductService.post(title, description, price)
       .then(() => {
-        window.alert("新課程已創建成功");
-        navigate("/course");
+        window.alert("新商品已發布成功");
+        navigate("/myProduct");
       })
       .catch((error) => {
         console.log(error.response);
@@ -37,7 +37,7 @@ const PostCourseComponent = (props) => {
     <div style={{ padding: "3rem" }}>
       {!currentUser && (
         <div>
-          <p>在發布新課程之前，您必須先登錄。</p>
+          <p>在發布新商品之前，您必須先登錄。</p>
           <button
             className="btn btn-primary btn-lg"
             onClick={handleTakeToLogin}
@@ -46,14 +46,14 @@ const PostCourseComponent = (props) => {
           </button>
         </div>
       )}
-      {currentUser && currentUser.user.role !== "instructor" && (
+      {/* {currentUser && currentUser.user.role !== "seller" && (
         <div>
-          <p>只有講師可以發布新課程。</p>
+          <p>只有賣家可以發布新商品。</p>
         </div>
-      )}
-      {currentUser && currentUser.user.role == "instructor" && (
+      )} */}
+      {currentUser && currentUser.user.role == "seller" && (
         <div className="form-group">
-          <label for="exampleforTitle">課程標題：</label>
+          <label for="exampleforTitle">商品標題：</label>
           <input
             name="title"
             type="text"
@@ -80,7 +80,7 @@ const PostCourseComponent = (props) => {
             onChange={handleChangePrice}
           />
           <br />
-          <button className="btn btn-primary" onClick={postCourse}>
+          <button className="btn btn-primary" onClick={postProduct}>
             交出表單
           </button>
           <br />
@@ -96,4 +96,4 @@ const PostCourseComponent = (props) => {
   );
 };
 
-export default PostCourseComponent;
+export default PostProductComponent;
